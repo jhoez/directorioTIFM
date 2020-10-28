@@ -1,9 +1,9 @@
 <?php
 namespace frontend\controllers;
 
+use Yii;
 use frontend\models\ResendVerificationEmailForm;
 use frontend\models\VerifyEmailForm;
-use Yii;
 use yii\base\InvalidArgumentException;
 use yii\web\BadRequestHttpException;
 use yii\web\Controller;
@@ -20,6 +20,7 @@ use frontend\models\Telfextension;
 use frontend\models\TelfextensionSearch;
 use frontend\models\Departamento;
 use frontend\models\DepartamentoSearch;
+use frontend\models\Catalogo;
 
 /**
  * Site controller
@@ -81,6 +82,8 @@ class SiteController extends Controller
     public function actionIndex()
     {
         //return $this->redirect(['login']);
+        $arrayDepart = Catalogo::find()->asArray()->where(['idpadre'=>1])->all();
+        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>42])->all();
         $searchModel = new DepartamentoSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
