@@ -68,9 +68,13 @@ CREATE TABLE dirtelf.usuario
 
 CREATE TABLE dirtelf.userextens
 (
-  iduser serial NOT NULL,
+  iduserextens serial,
   nombuser character varying(255),
-  CONSTRAINT iduser PRIMARY KEY (iduser)
+  fkuser integer,
+  CONSTRAINT iduserextens PRIMARY KEY (iduserextens),
+  CONSTRAINT fkuser FOREIGN KEY (fkuser)
+      REFERENCES dirtelf.usuario (iduser) MATCH SIMPLE
+      ON UPDATE NO ACTION ON DELETE NO ACTION
 );
 
 CREATE TABLE dirtelf.departamento

@@ -32,7 +32,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'Departamento',
                 'attribute'=>'nombdepart',
-                //'filter'=>ArrayHelper::map($modelArray, 'id', 'campo'),
+                'filter'=>ArrayHelper::map($arrayDepart, 'nombcata', 'nombcata'),
                 'value'=>function($data){
                     return $data->nombdepart;
                 },
@@ -40,10 +40,7 @@ $this->params['breadcrumbs'][] = $this->title;
             [
                 'label'=>'Ubicación',
                 'attribute'=>'ubicacion',
-                'filter'=>[
-                    0=>'Isla',
-                    1=>'Caracas',
-                ],
+                'filter'=>ArrayHelper::map($arrayUbic, 'nombcata', 'nombcata'),
                 'value'=>function($data){
                     return $data->ubicacion;
                 },

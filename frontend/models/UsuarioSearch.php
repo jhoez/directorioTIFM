@@ -4,12 +4,12 @@ namespace frontend\models;
 
 use yii\base\Model;
 use yii\data\ActiveDataProvider;
-use frontend\models\Userextens;
+use frontend\models\Usuario;
 
 /**
  * UsuarioSearch represents the model behind the search form of `frontend\models\Usuario`.
  */
-class UserextensSearch extends Userextens
+class UsuarioSearch extends Usuario
 {
     /**
      * {@inheritdoc}
@@ -17,9 +17,8 @@ class UserextensSearch extends Userextens
     public function rules()
     {
         return [
-            [['iduserextens'], 'integer'],
-            [['nombuser'], 'string', 'max' => 255],
-            [['nombuser'], 'safe'],
+            [['iduser', 'status'], 'integer'],
+            [['username', 'auth_key', 'password', 'password_reset_token', 'email', 'created_at', 'updated_at', 'verification_token'], 'safe'],
         ];
     }
 
@@ -41,7 +40,7 @@ class UserextensSearch extends Userextens
      */
     public function search($params)
     {
-        $query = Userextens::find();
+        $query = Usuario::find();
 
         // add conditions that should always apply here
 
@@ -59,10 +58,18 @@ class UserextensSearch extends Userextens
 
         // grid filtering conditions
         $query->andFilterWhere([
-            'iduserextens' => $this->iduserextens,
+            'iduser' => $this->iduser,
+            'status' => $this->status,
+            'created_at' => $this->created_at,
+            'updated_at' => $this->updated_at,
         ]);
 
-        $query->andFilterWhere(['ilike', 'nombuser', $this->nombuser]);
+        $query->andFilterWhere(['ilike', 'username', $this->username])
+            ->andFilterWhere(['ilike', 'auth_key', $this->auth_key])
+            ->andFilterWhere(['ilike', 'password', $this->password])
+            ->andFilterWhere(['ilike', 'password_reset_token', $this->password_reset_token])
+            ->andFilterWhere(['ilike', 'email', $this->email])
+            ->andFilterWhere(['ilike', 'verification_token', $this->verification_token]);
 
         return $dataProvider;
     }

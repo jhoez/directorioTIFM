@@ -42,9 +42,9 @@ class Telfextension extends \yii\db\ActiveRecord
     {
         return [
             'idtelfext' => 'Idtelfext',
-            'numextens' => 'Numextens',
-            'fkdepart' => 'Fkdepart',
+            'numextens' => 'Num. Extension',
             'ubicacion' => 'Ubicación',
+            'fkdepart' => 'Fkdepart',
         ];
     }
 

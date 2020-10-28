@@ -30,7 +30,7 @@ class Departamento extends \yii\db\ActiveRecord
             [['fkuser'], 'default', 'value' => null],
             [['fkuser'], 'integer'],
             [['nombdepart'], 'string', 'max' => 255],
-            [['fkuser'], 'exist', 'skipOnError' => true, 'targetClass' => Userextens::className(), 'targetAttribute' => ['fkuser' => 'iduser']],
+            [['fkuser'], 'exist', 'skipOnError' => true, 'targetClass' => Userextens::className(), 'targetAttribute' => ['fkuser' => 'iduserextens']],
         ];
     }
 
@@ -41,20 +41,20 @@ class Departamento extends \yii\db\ActiveRecord
     {
         return [
             'iddepart' => 'Iddepart',
-            'nombdepart' => 'Nombdepart',
+            'nombdepart' => 'Nomb. departamento',
             'fkuser' => 'Fkuser',
         ];
     }
 
     public function getuser()
     {
-        $usuario = Userextens::find()->where(['iduser'=>$this->fkuser])-one();
+        $usuario = Userextens::find()->where(['iduserextens'=>$this->fkuser])-one();
         return $usuario;
     }
 
     public function getfkuser()
     {
-        return $this->hasOne(Userextens::className(),['iduser'=>'fkuser']);
+        return $this->hasOne(Userextens::className(),['iduserextens'=>'fkuser']);
     }
 
     public function getextension()

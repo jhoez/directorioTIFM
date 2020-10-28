@@ -3,7 +3,7 @@ namespace frontend\models;
 
 use Yii;
 use yii\base\Model;
-use common\models\User;
+use frontend\models\Usuario;
 
 /**
  * Signup form
@@ -23,14 +23,14 @@ class SignupForm extends Model
         return [
             ['username', 'trim'],
             ['username', 'required'],
-            ['username', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This username has already been taken.'],
+            ['username', 'unique', 'targetClass' => '\frontend\models\Usuario', 'message' => 'This username has already been taken.'],
             ['username', 'string', 'min' => 2, 'max' => 255],
 
             ['email', 'trim'],
             ['email', 'required'],
             ['email', 'email'],
             ['email', 'string', 'max' => 255],
-            ['email', 'unique', 'targetClass' => '\common\models\User', 'message' => 'This email address has already been taken.'],
+            ['email', 'unique', 'targetClass' => '\frontend\models\Usuario', 'message' => 'This email address has already been taken.'],
 
             ['password', 'required'],
             ['password', 'string', 'min' => 6],
@@ -47,14 +47,25 @@ class SignupForm extends Model
         if (!$this->validate()) {
             return null;
         }
-        
-        $user = new User();
+
+        $user = new Usuario;
         $user->username = $this->username;
-        $user->email = $this->email;
-        $user->setPassword($this->password);
         $user->generateAuthKey();
+        $user->password = $this->password;
+        $user->generatePasswordResetToken();
+        $user->email = $this->email;
+        $user->created_at = date( "Y-m-d h:i:s",time() );//strftime("%Y-%m-%d %I:%M:%S")
+        $user->updated_at = date( "Y-m-d h:i:s",time() );//strftime("%Y-%m-%d %I:%M:%S")
         $user->generateEmailVerificationToken();
-        return $user->save() && $this->sendEmail($user);
+
+        /*
+        // se asigna por defecto el role tutor al usuario creado.
+        $auth = Yii::$app->authManager;
+        $tutorRole = $auth->getRole('tutor');
+        $auth->assign($tutorRole, $user->getId());
+        */
+        return $user->save();
+        //return $user->save() && $this->sendEmail($user);
 
     }
 

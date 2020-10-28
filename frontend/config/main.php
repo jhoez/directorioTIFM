@@ -13,7 +13,52 @@ return [
     'bootstrap' => ['log'],
     'timeZone'=>'America/Caracas',//para definir bien la hora local
     'controllerNamespace' => 'frontend\controllers',
+    'modules'=>[
+        'admin' => [
+            'controllerMap' => [
+                'assignment' => [
+                    'class' => 'mdm\admin\controllers\AssignmentController',
+                    'userClassName' => 'frontend\models\Usuario',
+                    'idField' => 'iduser',
+                    'usernameField' => 'username',
+                    //'fullnameField' => 'profile.full_name',
+                    'extraColumns' => [
+                        [
+                            'attribute' => 'email',
+                            'label' => 'email',
+                            'value' => function($model, $key, $index, $column) {
+                                return $model->email;
+                            },
+                        ],
+                        [
+                            'attribute' => 'password',
+                            'label' => 'Contraseña',
+                            'value' => function($model, $key, $index, $column) {
+                                return $model->password;
+                            },
+                        ],
+                    ],
+                    'searchClass' => 'frontend\models\UsuarioSearch'
+                ],
+            ],
+            'class' => 'mdm\admin\Module',
+            'layout' => 'left-menu', // por defaults es null, cuando no deseas usar el menú Otros valores opcionales son 'right-menu' and 'top-menu'
+            'menus' => [
+                'assignment' => [
+                    'label' => 'Asignaciones'// change label
+                ],
+                'role' => 'Role de Usuario', // disable menu
+                'permission' => 'Permisos', // disable menu
+                'route' => 'Rutas', // disable menu
+                'rule' => 'Reglas', // disable menu
+            ],
+            'mainLayout' => '@app/views/layouts/main.php',// utiliza el menu del framework
+        ]
+    ],
     'components' => [
+        'authManager' => [
+            'class' => 'yii\rbac\DbManager', // or use 'yii\rbac\PhpManager'
+        ],
         'request' => [
             'csrfParam' => '_csrf-frontend',
         ],
@@ -44,6 +89,13 @@ return [
             'rules' => [
             ],
         ],
+    ],
+    'as access' => [
+        'class' => 'mdm\admin\components\AccessControl',
+        'allowActions' => [
+            'site/*',
+            'admin/*',
+        ]
     ],
     'params' => $params,
 ];

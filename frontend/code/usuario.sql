@@ -1,4 +1,4 @@
-insert into dirtelf.usuario (nombuser)
+insert into dirtelf.userextens (nombuser)
 values
 ('ZONIA  - AUDITORIA EXT'),
 ('SECRETARIA GENERAL'),

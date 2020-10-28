@@ -9,7 +9,7 @@ use yii\web\BadRequestHttpException;
 use yii\web\Controller;
 use yii\filters\VerbFilter;
 use yii\filters\AccessControl;
-use common\models\LoginForm;
+use frontend\models\LoginForm;
 use frontend\models\PasswordResetRequestForm;
 use frontend\models\ResetPasswordForm;
 use frontend\models\SignupForm;
@@ -90,6 +90,8 @@ class SiteController extends Controller
         return $this->render('index', [
             'searchModel' => $searchModel,
             'dataProvider' => $dataProvider,
+            'arrayDepart' => $arrayDepart,
+            'arrayUbic' => $arrayUbic
         ]);
     }
 
@@ -105,7 +107,7 @@ class SiteController extends Controller
         }
 
         $model = new LoginForm();
-        if ($model->load(Yii::$app->request->post()) && $model->login()) {
+        if ( $model->load(Yii::$app->request->post()) && $model->login() ) {
             return $this->goBack();
         } else {
             $model->password = '';
