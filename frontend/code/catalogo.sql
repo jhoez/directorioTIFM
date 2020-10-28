@@ -1,0 +1,57 @@
+
+-- CATALOGO DE NOMBRE DEPARTAMENTO
+insert into dirtelf.catalogo (idpadre,nombcata)
+values
+(0,'departamento');
+
+INSERT INTO dirtelf.catalogo (idpadre,nombcata)
+values
+(1,'AUDITORIA EXT'),
+(1,'SECRETARIA GENERAL'),
+(1,'ADMINISTRACION'),
+(1,'SALA CONFERENCIA'),
+(1,'INTENDENTE'),
+(1,'SECRETARIO PROTECCION SOCIAL'),
+(1,'CONSULTOR'),
+(1,'FUNDAMAR'),
+(1,'SEGURIDAD'),
+(1,'CORPOTUR'),
+(1,'Sin departamento'),
+(1,'COORDINACION COMPRAS'),
+(1,'TESORERIA'),
+(1,'TALENTO HUMANO 1'),
+(1,'DIRECCION GESTION SOCIAL'),
+(1,'INFRAESTRUCTURA'),
+(1,'BIENES'),
+(1,'INFORMATICA'),
+(1,'SECRETARIO APOYO Y SERVICIO'),
+(1,'Sin Gerencia'),
+(1,'CONSULTORIA JURIDICA'),
+(1,'DIRECCION PLANIFICACION Y PRESUPUESTO'),
+(1,'INFRAESTRUCTURA ALFREDO E'),
+(1,'RECAUDACION'),
+(1,'ADMINISTRACION Y PLA'),
+(1,'FUNDAIMIR'),
+(1,'DIRECCION RECAUDACION'),
+(1,'DIRECTOR DESPACHO'),
+(1,'HIDROCARBUROS'),
+(1,'PRESUPUESTO'),
+(1,'GESTION SOCIAL'),
+(1,'CONTABILIDAD'),
+(1,'COMPRAS'),
+(1,'PLANIFICACION'),
+(1,'ARCHIVO TALENTO HUMANO'),
+(1,'DIRECCION GESTION COMUNICACIONAL'),
+(1,'DESPACHO YASMIN'),
+(1,'RRHH'),
+(1,'SAIM'),
+(1,'SATIM');
+
+-- CATALOGO DE UBICACION
+insert into dirtelf.catalogo (idpadre,nombcata)
+values
+(0,'ubicacion');
+
+insert into dirtelf.catalogo (idpadre,nombcata)
+values
+(42,'CARACAS CFL');
