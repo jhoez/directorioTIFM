@@ -3,7 +3,6 @@
 namespace frontend\models;
 
 use Yii;
-use frontend\models\Departamento;
 
 /**
  * This is the model class for table "dirtelf.usuario".
@@ -48,7 +47,11 @@ class Userextens extends \yii\db\ActiveRecord
 
     public function getdepartamento()
     {
-        $departamento = Departamento::find()->where(['fkuser'=>$this->iduserextens])->one();
-        return $departamento;
+        return $this->hasOne(Departamento::className(),['fkuser'=>'iduserextens']);
+    }
+
+    public function getuser()
+    {
+        return $this->hasOne(Usuario::className(),['iduser'=>'fkuser']);
     }
 }

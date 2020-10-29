@@ -32,7 +32,7 @@ class UsuarioController extends Controller
             'verbs' => [
                 'class' => VerbFilter::className(),
                 'actions' => [
-                    'delete' => ['POST'],
+                    'delete' => ['GET'],
                 ],
             ],
         ];
@@ -44,7 +44,6 @@ class UsuarioController extends Controller
      */
     public function actionIndex()
     {
-
         $searchModel = new UsuarioSearch();
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
         $extsearchModel = new UserextensSearch();
@@ -64,10 +63,12 @@ class UsuarioController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionView($id)
+    public function actionView()
     {
+        $purifier = new HtmlPurifier;
+        $resultado = $purifier->process( Yii::$app->request->get('id') );
         return $this->render('view', [
-            'model' => $this->findModel($id),
+            'model' => $this->findModel($resultado),
         ]);
     }
 
@@ -151,10 +152,7 @@ class UsuarioController extends Controller
 
         if ( $user->load(Yii::$app->request->post()) ) {
             if ( $user->validate() ) {
-                $user->generateAuthKey();
-                $user->generatePasswordResetToken();
-                $user->created_at = date( "Y-m-d h:i:s",time() );//strftime("%Y-%m-%d %I:%M:%S")
-                $user->generateEmailVerificationToken();
+                $user->updated_at = date( "Y-m-d h:i:s",time() );//strftime("%Y-%m-%d %I:%M:%S")
 
                 /*
                 // se asigna por defecto el role tutor al usuario creado.
@@ -180,16 +178,87 @@ class UsuarioController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionUpdate($id)
+    public function actionUpdate()
     {
-        $model = $this->findModel($id);
+        $purifier = new HtmlPurifier;
+        $result = (integer)$purifier->process(Yii::$app->request->get('id'));
+        $user = Usuario::findOne($result);
 
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->iduser]);
+        if ( $user->load(Yii::$app->request->post()) ) {
+            if ( $user->validate() ) {
+                $user->updated_at = date( "Y-m-d h:i:s",time() );//strftime("%Y-%m-%d %I:%M:%S")
+                /*
+                // se asigna por defecto el role tutor al usuario creado.
+                $auth = Yii::$app->authManager;
+                $tutorRole = $auth->getRole('tutor');
+                $auth->assign($tutorRole, $user->getId());
+                */
+                if ( $user->save() ) {
+                    return $this->redirect(['view', 'id' => $user->iduser]);
+                }
+            }
         }
 
-        return $this->render('update', [
-            'model' => $model,
+        return $this->render('create', [
+            'user' => $user,
+        ]);
+    }
+
+    /**
+     * Updates an existing Usuario model.
+     * If update is successful, the browser will be redirected to the 'view' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionUpdateeu()
+    {
+        $purifier = new HtmlPurifier;
+        $result = (integer)$purifier->process(Yii::$app->request->get('id'));
+        $userextens = Userextens::findOne($result);
+        $departamento = Departamento::find()->where(['fkuser'=>$userextens->iduserextens])->one();
+        $telfextension = Telfextension::find()->where(['fkdepart'=>$departamento->iddepart])->one();
+        $arrayDepart = Catalogo::find()->asArray()->where(['idpadre'=>1])->all();
+        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>42])->all();
+
+        if (
+            $userextens->load(Yii::$app->request->post()) &&
+            $departamento->load(Yii::$app->request->post()) &&
+            $telfextension->load(Yii::$app->request->post())
+        ) {
+            //*echo "<pre>";var_dump( Yii::$app->request->post() );die;
+            if (
+                $userextens->validate() &&
+                $departamento->validate() &&
+                $telfextension->validate()
+            ) {
+                $transaction = $telfextension->db->beginTransaction();
+                try {
+
+                    if ( $userextens->save() ) {
+                        $departamento->fkuser = $userextens->iduserextens;
+                        if ( $departamento->save() ) {
+                            $telfextension->fkdepart = $departamento->iddepart;
+                            if ( $telfextension->save() ) {
+                                $transaction->commit();
+                                return $this->redirect(['vieweu', 'id' => $userextens->iduserextens]);
+                            }
+                        }
+                    }
+                } catch (ErrorException $e) {
+                    echo "<pre>";var_dump($e);die;
+                    $transaction->rollBack();
+                }
+
+            }
+        }
+
+        return $this->render('updateeu', [
+            'userextens' => $userextens,
+            'departamento' => $departamento,
+            'telfextension' => $telfextension,
+            'arrayDepart'=>$arrayDepart,
+            'arrayUbic'=>$arrayUbic
         ]);
     }
 
@@ -200,9 +269,35 @@ class UsuarioController extends Controller
      * @return mixed
      * @throws NotFoundHttpException if the model cannot be found
      */
-    public function actionDelete($id)
+    public function actionDelete()
     {
-        $this->findModel($id)->delete();
+        $purifier = new HtmlPurifier;
+        $result = (integer)$purifier->process(Yii::$app->request->get('id'));
+        $this->findModel($result)->delete();
+
+        return $this->redirect(['index']);
+    }
+
+    /**
+     * Deletes an existing Usuario model.
+     * If deletion is successful, the browser will be redirected to the 'index' page.
+     * @param integer $id
+     * @return mixed
+     * @throws NotFoundHttpException if the model cannot be found
+     */
+    public function actionDeleteeu()
+    {
+        $purifier = new HtmlPurifier;
+        $result = (integer)$purifier->process(Yii::$app->request->get('id'));
+        $userextens = Userextens::findOne($result);
+        $departamento = Departamento::find()->where(['fkuser'=>$userextens->iduserextens])->one();
+        $telfextension = Telfextension::find()->where(['fkdepart'=>$departamento->iddepart])->one();
+
+        if ($userextens !== null) {
+            $telfextension->delete();
+            $departamento->delete();
+            $userextens->delete();
+        }
 
         return $this->redirect(['index']);
     }

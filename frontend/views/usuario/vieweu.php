@@ -33,7 +33,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Nomb. Departamento',
                 'attribute'=>'nombdepart',
                 'value'=>function($data){
-                    return $data->getdepartamento()->nombdepart;
+                    return $data->getdepartamento()->one()->nombdepart;
                 }
             ],
 
@@ -41,14 +41,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Num. Extensión',
                 'attribute'=>'numextens',
                 'value'=>function($data){
-                    return $data->getdepartamento()->getextension()->one()->numextens;
+                    return $data->getdepartamento()->one()->getextension()->one()->numextens;
                 }
             ],
             [
                 'label'=>'Ubicación',
                 'attribute'=>'ubicacion',
                 'value'=>function($data){
-                    return $data->getdepartamento()->getextension()->one()->ubicacion;
+                    return $data->getdepartamento()->one()->getextension()->one()->ubicacion;
                 }
             ],
         ],

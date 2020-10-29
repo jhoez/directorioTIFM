@@ -16,6 +16,12 @@ $this->params['breadcrumbs'][] = $this->title;
     <?php //echo $this->render('_search', ['model' => $searchModel]); ?>
 
     <h1 class="text-center">Usuarios y extensión</h1>
+    <?=Html::beginForm(['/site/generarpdf'],'post');?>
+    <?=Html::submitButton(
+        "Generar PDF",
+        ['class' => 'btn btn-primary']
+    );?>
+    <?=Html::endForm();?>
 
     <?= GridView::widget([
         'dataProvider' => $dataProvider,
@@ -52,7 +58,6 @@ $this->params['breadcrumbs'][] = $this->title;
                     return $data->getextension()->one()->numextens;
                 },
             ],
-            ['class' => 'yii\grid\ActionColumn'],
         ],
     ]);?>
 

@@ -13,10 +13,12 @@ $this->params['breadcrumbs'][] = 'Actualizar';
 
     <h1><?= Html::encode($this->title) ?></h1>
 
-    <?= $this->render('_form', [
+    <?= $this->render('_formeu', [
         'userextens' => $userextens,
         'departamento' => $departamento,
         'telfextension' => $telfextension,
+        'arrayDepart'=>$arrayDepart,
+        'arrayUbic'=>$arrayUbic
     ]) ?>
 
 </div>

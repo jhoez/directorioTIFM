@@ -21,6 +21,7 @@ use frontend\models\TelfextensionSearch;
 use frontend\models\Departamento;
 use frontend\models\DepartamentoSearch;
 use frontend\models\Catalogo;
+use kartik\mpdf\Pdf;
 
 /**
  * Site controller
@@ -275,4 +276,31 @@ class SiteController extends Controller
             'model' => $model
         ]);
     }
+
+    /**
+    *   @method generar PDF
+    *
+    */
+    public function actionGenerarpdf()
+    {
+        $departamento = Departamento::find()->all();
+        //API MPDF
+        $pdf = Yii::$app->pdf;
+        $API = $pdf->api;
+        // ARCHIVO CSS
+        $stylesheet = file_get_contents(Yii::$app->getBasePath().'/web/css/csspdf.css');
+        $API->WriteHTML($stylesheet,1);
+        //NOMBRE DEL PDF
+        $pdfFilename = 'ListaExtensiones.pdf';
+        // CARGA DE LA VISTA
+        $vista = $this->renderPartial('_reportepdf',[
+            'departamento'=>$departamento
+        ]);
+        //echo "<pre>";var_dump($vista);die;
+        // CARGA LA VISTA AL PDF
+        $API->WriteHtml($vista);
+        // DESCARGA EL PDF
+        $API->Output($pdfFilename,'D');
+    }
+
 }

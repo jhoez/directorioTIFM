@@ -11,6 +11,9 @@ use frontend\models\Userextens;
  */
 class UserextensSearch extends Userextens
 {
+    public $nombdepart;
+    public $numextens;
+    public $ubicacion;
     /**
      * {@inheritdoc}
      */
@@ -19,6 +22,7 @@ class UserextensSearch extends Userextens
         return [
             [['iduserextens'], 'integer'],
             [['nombuser'], 'string', 'max' => 255],
+            [['nombdepart','numextens','ubicacion'], 'string', 'max' => 255],
             [['nombuser'], 'safe'],
         ];
     }
@@ -41,7 +45,7 @@ class UserextensSearch extends Userextens
      */
     public function search($params)
     {
-        $query = Userextens::find();
+        $query = Userextens::find()->joinWith(['departamento']);
 
         // add conditions that should always apply here
 
@@ -62,7 +66,10 @@ class UserextensSearch extends Userextens
             'iduserextens' => $this->iduserextens,
         ]);
 
-        $query->andFilterWhere(['ilike', 'nombuser', $this->nombuser]);
+        $query->andFilterWhere(['ilike', 'nombuser', $this->nombuser])
+                ->andFilterWhere(['ilike', 'nombdepart', $this->nombdepart])
+                ->andFilterWhere(['ilike', 'numextens', $this->numextens])
+                ->andFilterWhere(['ilike', 'ubicacion', $this->ubicacion]);
 
         return $dataProvider;
     }

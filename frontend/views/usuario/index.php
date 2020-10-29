@@ -110,6 +110,11 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
     <h3 class="text-center">Usuarios de extension registrados</h3>
+    <?=Html::beginForm(['/site/generarpdf'],'post');?>
+    <?=Html::submitButton(
+        "Generar PDF",
+        ['class' => 'btn btn-primary']
+    );?>
     <?= GridView::widget([
         'dataProvider' => $extdataProvider,
         'filterModel' => $extsearchModel,
@@ -126,7 +131,7 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Nomb. Departamento',
                 'attribute'=>'nombdepart',
                 'value'=>function($data){
-                    return $data->getdepartamento()->nombdepart;
+                    return $data->getdepartamento()->one()->nombdepart;
                 }
             ],
 
@@ -134,21 +139,21 @@ $this->params['breadcrumbs'][] = $this->title;
                 'label'=>'Num. Extensión',
                 'attribute'=>'numextens',
                 'value'=>function($data){
-                    return $data->getdepartamento()->getextension()->one()->numextens;
+                    return $data->getdepartamento()->one()->getextension()->one()->numextens;
                 }
             ],
             [
                 'label'=>'Ubicación',
                 'attribute'=>'ubicacion',
                 'value'=>function($data){
-                    return $data->getdepartamento()->getextension()->one()->ubicacion;
+                    return $data->getdepartamento()->one()->getextension()->one()->ubicacion;
                 }
             ],
             [
                 'class' => 'yii\grid\ActionColumn',
                 'header'=>'Acción',
                 'headerOptions'=>['width'=>'70'],
-                'template'=>'{vieweu}{update}{delete}',
+                'template'=>'{vieweu}{updateeu}{deleteeu}',
                 'buttons'=> [
                     'vieweu' => function($url,$model){
                         return Html::a(
@@ -165,7 +170,7 @@ $this->params['breadcrumbs'][] = $this->title;
                         }else {
                         }
                     },
-                    'delete' => function($url,$model){
+                    'deleteeu' => function($url,$model){
                         if ( Yii::$app->user->can('administrador') ) {
                             return Html::a(
                                 '<span class="glyphicon glyphicon-remove"></span>',
