@@ -1,6 +1,7 @@
 <?php
 
 use yii\helpers\Html;
+use yii\helpers\ArrayHelper;
 use yii\grid\GridView;
 use yii\jui\DatePicker;
 
@@ -110,77 +111,83 @@ $this->params['breadcrumbs'][] = $this->title;
     ]); ?>
 
     <h3 class="text-center">Usuarios de extension registrados</h3>
-    <?=Html::beginForm(['/site/generarpdf'],'post');?>
-    <?=Html::submitButton(
-        "Generar PDF",
-        ['class' => 'btn btn-primary']
-    );?>
-    <?= GridView::widget([
-        'dataProvider' => $extdataProvider,
-        'filterModel' => $extsearchModel,
-        'columns' => [
-            ['class' => 'yii\grid\SerialColumn'],
-            [
-                'label'=>'Usuario Extensión',
-                'attribute'=>'nombuser',
-                'value'=>function($data){
-                    return $data->nombuser;
-                }
-            ],
-            [
-                'label'=>'Nomb. Departamento',
-                'attribute'=>'nombdepart',
-                'value'=>function($data){
-                    return $data->getdepartamento()->one()->nombdepart;
-                }
-            ],
-
-            [
-                'label'=>'Num. Extensión',
-                'attribute'=>'numextens',
-                'value'=>function($data){
-                    return $data->getdepartamento()->one()->getextension()->one()->numextens;
-                }
-            ],
-            [
-                'label'=>'Ubicación',
-                'attribute'=>'ubicacion',
-                'value'=>function($data){
-                    return $data->getdepartamento()->one()->getextension()->one()->ubicacion;
-                }
-            ],
-            [
-                'class' => 'yii\grid\ActionColumn',
-                'header'=>'Acción',
-                'headerOptions'=>['width'=>'70'],
-                'template'=>'{vieweu}{updateeu}{deleteeu}',
-                'buttons'=> [
-                    'vieweu' => function($url,$model){
-                        return Html::a(
-                            '<span class="glyphicon glyphicon-eye-open"></span>',
-                            $url
-                        );
-                    },
-                    'updateeu' => function($url,$model){
-                        if ( Yii::$app->user->can('administrador') ) {
+    <div class="text-right">
+        <?=Html::beginForm(['/site/generarpdf'],'post');?>
+        <?=Html::submitButton(
+            "Generar PDF",
+            ['class' => 'btn btn-primary']
+        );?>
+    </div>
+    <br>
+    <div class="">
+        <?= GridView::widget([
+            'dataProvider' => $extdataProvider,
+            'filterModel' => $extsearchModel,
+            'columns' => [
+                ['class' => 'yii\grid\SerialColumn'],
+                [
+                    'label'=>'Usuario Extensión',
+                    'attribute'=>'nombuser',
+                    'value'=>function($data){
+                        return $data->getuser()->nombuser;
+                    }
+                ],
+                [
+                    'label'=>'Departamento',
+                    'attribute'=>'nombdepart',
+                    'filter'=>ArrayHelper::map($arrayDepart, 'nombcata', 'nombcata'),
+                    'value'=>function($data){
+                        return $data->nombdepart;
+                    }
+                ],
+                [
+                    'label'=>'Ubicación',
+                    'attribute'=>'ubicacion',
+                    'filter'=>ArrayHelper::map($arrayUbic, 'nombcata', 'nombcata'),
+                    'value'=>function($data){
+                        return $data->getExtens()->ubicacion;
+                    }
+                ],
+                [
+                    'label'=>'Extensión',
+                    'attribute'=>'numextens',
+                    'value'=>function($data){
+                        return $data->getExtens()->numextens;
+                    }
+                ],
+                [
+                    'class' => 'yii\grid\ActionColumn',
+                    'header'=>'Acción',
+                    'headerOptions'=>['width'=>'70'],
+                    'template'=>'{vieweu}{updateeu}{deleteeu}',
+                    'buttons'=> [
+                        'vieweu' => function($url,$model){
                             return Html::a(
-                                '<span class="glyphicon glyphicon-pencil"></span>',
+                                '<span class="glyphicon glyphicon-eye-open"></span>',
                                 $url
                             );
-                        }else {
-                        }
-                    },
-                    'deleteeu' => function($url,$model){
-                        if ( Yii::$app->user->can('administrador') ) {
-                            return Html::a(
-                                '<span class="glyphicon glyphicon-remove"></span>',
-                                $url
-                            );
-                        }else {
-                        }
-                    },
+                        },
+                        'updateeu' => function($url,$model){
+                            if ( Yii::$app->user->can('administrador') ) {
+                                return Html::a(
+                                    '<span class="glyphicon glyphicon-pencil"></span>',
+                                    $url
+                                );
+                            }else {
+                            }
+                        },
+                        'deleteeu' => function($url,$model){
+                            if ( Yii::$app->user->can('administrador') ) {
+                                return Html::a(
+                                    '<span class="glyphicon glyphicon-remove"></span>',
+                                    $url
+                                );
+                            }else {
+                            }
+                        },
+                    ],
                 ],
             ],
-        ],
-    ]); ?>
+        ]); ?>
+    </div>
 </div>

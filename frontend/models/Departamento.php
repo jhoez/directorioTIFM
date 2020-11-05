@@ -45,18 +45,24 @@ class Departamento extends \yii\db\ActiveRecord
             'fkuser' => 'Fkuser',
         ];
     }
-
+    //
     public function getuser()
     {
         $usuario = Userextens::find()->where(['iduserextens'=>$this->fkuser])->one();
         return $usuario;
     }
-
+    //
     public function getfkuser()
     {
         return $this->hasOne(Userextens::className(),['iduserextens'=>'fkuser']);
     }
-
+    //
+    public function getExtens()
+    {
+        $extension = Telfextension::find()->where(['fkdepart'=>$this->iddepart])->one();
+        return $extension;
+    }
+    //
     public function getextension()
     {
         return $this->hasOne(Telfextension::className(),['fkdepart'=>'iddepart']);

@@ -45,7 +45,7 @@ class UserextensSearch extends Userextens
      */
     public function search($params)
     {
-        $query = Userextens::find()->joinWith(['departamento']);
+        $query = Userextens::find();
 
         // add conditions that should always apply here
 

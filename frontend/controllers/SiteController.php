@@ -44,7 +44,7 @@ class SiteController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => ['logout'],
+                        'actions' => ['logout','error'],
                         'allow' => true,
                         'roles' => ['@'],
                     ],
@@ -84,7 +84,7 @@ class SiteController extends Controller
     {
         //return $this->redirect(['login']);
         $arrayDepart = Catalogo::find()->asArray()->where(['idpadre'=>1])->all();
-        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>42])->all();
+        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>2])->all();
         $searchModel = new DepartamentoSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
 
@@ -303,4 +303,8 @@ class SiteController extends Controller
         $API->Output($pdfFilename,'D');
     }
 
+    public function actionError()
+    {
+        return $this->render('error');
+    }
 }

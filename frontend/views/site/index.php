@@ -48,14 +48,14 @@ $this->params['breadcrumbs'][] = $this->title;
                 'attribute'=>'ubicacion',
                 'filter'=>ArrayHelper::map($arrayUbic, 'nombcata', 'nombcata'),
                 'value'=>function($data){
-                    return $data->getextension()->one()->ubicacion;
+                    return $data->getExtens()->ubicacion;
                 },
             ],
             [
                 'label'=>'Extensión',
                 'attribute'=>'numextens',
                 'value'=>function($data){
-                    return $data->getextension()->one()->numextens;
+                    return $data->getExtens()->numextens;
                 },
             ],
         ],

@@ -15,6 +15,7 @@ use frontend\models\TelfextensionSearch;
 use yii\web\Controller;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\filters\AccessControl;
 use yii\base\ErrorException;
 use yii\helpers\HtmlPurifier;
 
@@ -35,6 +36,20 @@ class UsuarioController extends Controller
                     'delete' => ['GET'],
                 ],
             ],
+            'access'=>[
+                'class'=> AccessControl::className(),
+                'only'=> ['index','create','update','updateeu','delete','deleteeu','view','vieweu','create','createuserextens'],
+                'rules'=>[
+                    [
+                        'allow'=>true,
+                        'actions'=>['index','create','update','updateeu','delete','deleteeu','view','vieweu','create','createuserextens'],
+                        'roles'=>['@'],
+                        /*'denyCallback' => function ($rule, $action) {
+                            throw new \Exception('No tienes los suficientes permisos para acceder a esta página');
+                        }*/
+                    ],
+                ],
+            ]
         ];
     }
 
@@ -44,9 +59,11 @@ class UsuarioController extends Controller
      */
     public function actionIndex()
     {
-        $searchModel = new UsuarioSearch();
+        $arrayDepart = Catalogo::find()->asArray()->where(['idpadre'=>1])->all();
+        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>2])->all();
+        $searchModel = new UsuarioSearch;
         $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
-        $extsearchModel = new UserextensSearch();
+        $extsearchModel = new DepartamentoSearch;
         $extdataProvider = $extsearchModel->search(Yii::$app->request->queryParams);
 
         return $this->render('index', [
@@ -54,6 +71,8 @@ class UsuarioController extends Controller
             'dataProvider' => $dataProvider,
             'extsearchModel' => $extsearchModel,
             'extdataProvider' => $extdataProvider,
+            'arrayDepart' => $arrayDepart,
+            'arrayUbic' => $arrayUbic
         ]);
     }
 
@@ -97,8 +116,8 @@ class UsuarioController extends Controller
         $userextens = new Userextens;
         $departamento = new Departamento;
         $telfextension = new Telfextension;
-        $arrayDepart = Catalogo::find()->asArray()->where(['idpadre'=>1])->all();
-        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>42])->all();
+        $arrayDepart = Catalogo::find()->asArray()->where(['idpadre'=>1])->all();// departamento
+        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>2])->all();// ubicacion
 
         if (
             $userextens->load(Yii::$app->request->post()) &&
@@ -152,7 +171,10 @@ class UsuarioController extends Controller
 
         if ( $user->load(Yii::$app->request->post()) ) {
             if ( $user->validate() ) {
-                $user->updated_at = date( "Y-m-d h:i:s",time() );//strftime("%Y-%m-%d %I:%M:%S")
+                $user->generateAuthKey();
+                $user->generatePasswordResetToken();
+                $user->status=1;
+                $user->created_at = date( "Y-m-d h:i:s",time() );//strftime("%Y-%m-%d %I:%M:%S")
 
                 /*
                 // se asigna por defecto el role tutor al usuario creado.
@@ -219,7 +241,7 @@ class UsuarioController extends Controller
         $departamento = Departamento::find()->where(['fkuser'=>$userextens->iduserextens])->one();
         $telfextension = Telfextension::find()->where(['fkdepart'=>$departamento->iddepart])->one();
         $arrayDepart = Catalogo::find()->asArray()->where(['idpadre'=>1])->all();
-        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>42])->all();
+        $arrayUbic = Catalogo::find()->asArray()->where(['idpadre'=>2])->all();
 
         if (
             $userextens->load(Yii::$app->request->post()) &&

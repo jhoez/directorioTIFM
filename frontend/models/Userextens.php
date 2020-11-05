@@ -45,6 +45,13 @@ class Userextens extends \yii\db\ActiveRecord
         ];
     }
 
+    //
+    public function getDepart()
+    {
+        $departamento = Departamento::find()->where(['fkuser'=>$this->iduserextens])->one();
+        return $departamento;
+    }
+    //
     public function getdepartamento()
     {
         return $this->hasOne(Departamento::className(),['fkuser'=>'iduserextens']);
