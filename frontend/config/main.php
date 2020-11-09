@@ -102,8 +102,8 @@ return [
         'class' => 'mdm\admin\components\AccessControl',
         'allowActions' => [
             'site/*',
-            'admin/*',
-            'usuario/*'
+            //'admin/*',
+            //'usuario/*'
         ]
     ],
     'params' => $params,

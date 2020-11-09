@@ -58,8 +58,6 @@ CREATE TABLE dirtelf.usuario
   created_at timestamp without time zone,
   updated_at timestamp without time zone,
   verification_token character varying(255) DEFAULT NULL::character varying,
-  cedula character varying(30),
-  cbit character varying(255),
   CONSTRAINT user_pkey PRIMARY KEY (iduser),
   CONSTRAINT user_email_key UNIQUE (email),
   CONSTRAINT user_password_reset_token_key UNIQUE (password_reset_token),
