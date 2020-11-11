@@ -37,8 +37,8 @@ AppAsset::register($this);
     ]);
     $menuItems = [];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Crear Usuario', 'url' => ['/site/signup']];
-        $menuItems[] = ['label' => 'Iniciar Session', 'url' => ['/site/login']];
+        //$menuItems[] = ['label' => 'Crear Usuario', 'url' => ['/site/signup']];
+        //$menuItems[] = ['label' => 'Iniciar Session', 'url' => ['/site/login']];
     } else {
         $menuItems[] = ['label' => 'Inicio', 'url' => ['/site/index']];
         $menuItems[] = ['label' => 'Administrar Usuarios', 'url' => ['/usuario/index']];
